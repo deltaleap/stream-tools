@@ -7,6 +7,7 @@ The module has been developed internally in Delta Leap, and currently it is part
 To learn how to use the module, just watch the file `examples` folder.
 
 #### 1. Stream merging
+![merge](assets/merge.png)
 
 #### 2. stream joining
 
