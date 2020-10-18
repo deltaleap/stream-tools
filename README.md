@@ -17,7 +17,7 @@ The joined stream emits the state at each update.
 ![join_update_state](assets/join_update_state.png)
 
 Flow example:
-```
+
 <pre>
 > <b>time 1</b> stream_1 emits 1
 > <b>time 1</b> joined_stream emits [1, None]
@@ -26,7 +26,7 @@ Flow example:
 > <b>time 8</b> stream_1 emits 5
 > <b>time 8</b> joined_stream emits [5, 2]
 </pre>
-```
+
 
 ###### Option 2: Time catch
 The joined stream conserve a state that it is update at each observation from any upstream.
@@ -35,7 +35,7 @@ The joined sream emits the state at each update.
 ![join_time_catch](assets/join_time_catch.png)
 
 Flow example (delta time: 3):
-```
+
 <pre>
 > <b>time 1</b> stream_1 emits 1
 > <b>time 1</b> joined_stream emits [1, None]
@@ -48,7 +48,7 @@ Flow example (delta time: 3):
 > <b>time 15</b> stream_2 emits 9
 > <b>time 15</b> joined_stream emits [None, 9]
 </pre>
-```
+
 
 ###### Option 3: Timeframe
 The joined stream conserva a state for a timeframe. The state conserve information from any upstream
@@ -56,7 +56,7 @@ that emits in the given timeframe.
 The joined stream emits the state at the end of the timeframe.
 
 Flow example (timeframe: 3):
-```
+
 <pre>
 > <b>time 1</b> stream_1 emits 1
 > <b>time 2</b> stream_2 emits 2
@@ -70,4 +70,3 @@ Flow example (timeframe: 3):
 > <b>time 15</b> stream_2 emits 21
 > <b>time 15</b> joined_stream emits [None, 21]
 </pre>
-```
