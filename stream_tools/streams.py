@@ -2,11 +2,11 @@ import asyncio
 
 import aioredis
 
-from .join import Join
+# from .join import Join
 from .merge import Merge
 
 
-class Streams(Merge, Join):
+class Streams:
 	def __init__(self, stream_list):
 		self.stream_list = list(stream_list)
 		self.stream_names = [s.name for s in stream_list]
@@ -17,24 +17,22 @@ class Streams(Merge, Join):
 			'redis://localhost'
 		)
 
-		asyncio.ensure_future(self._reads())
+		asyncio.ensure_future(self._reads(self.q))
 
 		return self
 
 	async def __aexit__(self, exception_type, exception, traceback):
 		self.r.close()
 
-	def __aiter__(self):
-		return self
-	
-	async def __anext__(self):
-		res = await self.q.get()
-		return res
 
-	async def _reads(self):
+	def merge(self):
+		merger = Merge(self.r, self._reads, self.q)
+		return merger
+
+	async def _reads(self, queue):
 		while True:
 			res = await self.r.xread(
 				self.stream_names,
 				count=1
 			)
-			await self.q.put(res[0])
+			await queue.put(res[0])

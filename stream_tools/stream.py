@@ -1,9 +1,6 @@
 import aioredis
 
 
-from .join import Join
-from .merge import Merge
-
 class Stream:
 	def __init__(self, stream_name):
 		self.stream_name = str(stream_name)
