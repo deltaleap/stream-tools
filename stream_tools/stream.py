@@ -4,13 +4,12 @@ import aioredis
 class Stream:
 	def __init__(self, stream_name):
 		self.stream_name = str(stream_name)
-	
+
 	@property
 	def name(self):
 		return self.stream_name
 
 	async def __aenter__(self):
-		print("ohno")
 		self.r = await aioredis.create_redis(
 			'redis://localhost'
 		)

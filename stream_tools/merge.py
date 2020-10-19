@@ -2,15 +2,15 @@ import asyncio
 
 
 class Merge:
-	def __init__(self, redis, callback, queue):
-		self.r = redis
-		self.c = callback
-		self.q = queue
-		asyncio.ensure_future(self.c(self.q))
+    def __init__(self, redis, callback):
+        self.redis = redis
+        self.callback = callback
+        self.queue = asyncio.Queue()
+        asyncio.ensure_future(self.callback(self.queue))
 
-	def __aiter__(self):
-		return self
+    def __aiter__(self):
+        return self
 
-	async def __anext__(self):
-		res = await self.q.get()
-		return res
+    async def __anext__(self):
+        res = await self.queue.get()
+        return res
