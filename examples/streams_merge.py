@@ -1,13 +1,3 @@
-"""
-This example work. Though, there is a problem.
-'async for value in streams' is too generic and don't let
-distinguish the api of this merge tool from the join tool.
-To be more explicit and dev-friendly, it has to become as follows:
-'async for value in streams.merge()'.
-In this way it will possible to distinguish this merge tool api
-from the join tool api ('async for value in streams.join()')
-"""
-
 import asyncio
 
 import uvloop
@@ -20,6 +10,8 @@ async def main():
 	stream2 = Stream('test_stream_2')
 	async with Streams([stream1, stream2]) as streams:
 		async for value in streams.merge():
+		    # Return a tuple:
+		    #  (stream name, record id, record content)
 			print(f"{value[0].decode()}: {value[1].decode()}")
 
 
