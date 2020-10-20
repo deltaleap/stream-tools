@@ -6,12 +6,12 @@ The module has been developed internally in Delta Leap, and currently it is part
 `stream-tools` implement a simple Stream module through a context manager.
 To learn how to use the module, just watch the file `examples` folder.
 
-#### Merging two streams
+### Merging two streams
 ![merge](assets/merge.png)
 
-#### Joining two streams
+### Joining two streams
 
-###### Option 1: Update state
+#### Option 1: Update state
 The joined stream conserve a state that it is updated at each observation from any upstream.
 The joined stream emits the state at each update.
 ![join_update_state](assets/join_update_state.png)
@@ -28,7 +28,7 @@ Flow example:
 </pre>
 
 
-###### Option 2: Time catch
+#### Option 2: Time catch
 The joined stream conserve a state that it is update at each observation from any upstream.
 The state is conserved with the data from a certain number of second since the moment of each observation.
 The joined sream emits the state at each update.
@@ -50,7 +50,7 @@ Flow example (delta time: 3):
 </pre>
 
 
-###### Option 3: Timeframe
+#### Option 3: Timeframe
 The joined stream conserva a state for a timeframe. The state conserve information from any upstream
 that emits in the given timeframe.
 The joined stream emits the state at the end of the timeframe.
