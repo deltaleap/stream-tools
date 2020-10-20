@@ -51,9 +51,13 @@ Flow example (delta time: 3):
 
 
 #### Option 3: Timeframe
+> question: is it useful?
+
 The joined stream conserva a state for a timeframe. The state conserve information from any upstream
 that emits in the given timeframe.
 The joined stream emits the state at the end of the timeframe.
+
+This join method make lose the real-timeness.
 
 Flow example (timeframe: 3):
 
@@ -70,3 +74,9 @@ Flow example (timeframe: 3):
 > <b>time 15</b> stream_2 emits 21
 > <b>time 15</b> joined_stream emits [None, 21]
 </pre>
+
+
+### TODO
+non-realtime join type:
+- [ ] staker (stake data and release all data after x observations)
+- [ ] dam (stake data and release all data after x seconds)
