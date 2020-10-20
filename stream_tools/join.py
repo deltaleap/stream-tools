@@ -10,7 +10,12 @@ JOIN = [
 
 
 class Join:
-    def __init__(self, redis, callback, join: str, *args) -> None:
+    def __init__(self,
+        redis,
+        callback,
+        join: str,
+        *args
+    ) -> None:
         self.redis = redis
         self.callback = callback
 
@@ -24,11 +29,9 @@ class Join:
             self.state = {}
             self.state_time = {}
 
-        if join == 'timeframe':
-            self.window = args[0] * 1000
-
         if join == 'update_state':
             self.state = {}
+            self.state_time = {}
 
         self.queue = asyncio.Queue()
         asyncio.ensure_future(self.callback(self.queue))
@@ -44,23 +47,15 @@ class Join:
         elif self.join == 'update_state':
             return await self.update_state()
 
-    async def timeframe(self):
-        """
-        await asyncio.sleep(self.window)
-        res = await self.queue.get()
-        return res
-        """
-        pass  # TODO
-
     async def time_catch(self):
         res = await self.queue.get()
         join_time = int(time.time() * 1000)
 
-        self._store_state(join_time, res[0], res[1], res[2])
+        self._time_store_state(join_time, res[0], res[1], res[2])
 
         return self.state
 
-    def _store_state(self, join_time, state_key, state_id, state_value):
+    def _time_store_state(self, join_time, state_key, state_id, state_value) -> None:
         self.state[state_key] = (state_id, state_value)
 
         new_state_time = int(state_id.decode().split('-')[0])
@@ -72,4 +67,11 @@ class Join:
                 self.state[k] = None
 
     async def update_state(self):
-        pass  # TODO
+        res = await self.queue.get()
+        self._store_state(res[0], res[1], res[2])
+        return self.state
+
+    def _store_state(self, state_key, state_id, state_value) -> None:
+        self.state[state_key] = (state_id, state_value)
+        new_state_time = int(state_id.decode().split('-')[0])
+        self.state_time[state_key] = new_state_time
