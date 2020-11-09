@@ -1,6 +1,4 @@
-import asyncio
-
-import aioredis
+import aioredis  # type: ignore
 
 from .join import Join
 from .merge import Merge

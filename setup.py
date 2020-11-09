@@ -14,10 +14,5 @@ setup(
 			'pytest',
 			'flake8'
 		]
-	},
-	entry_points={
-		'console_scripts': [
-			# 'stream-tools='
-		]
 	}
 )

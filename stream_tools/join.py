@@ -10,7 +10,8 @@ JOIN = [
 
 
 class Join:
-    def __init__(self,
+    def __init__(
+        self,
         redis,
         callback,
         join: str,
@@ -55,7 +56,13 @@ class Join:
 
         return self.state
 
-    def _time_store_state(self, join_time, state_key, state_id, state_value) -> None:
+    def _time_store_state(
+        self,
+        join_time,
+        state_key,
+        state_id,
+        state_value
+    ) -> None:
         self.state[state_key] = (state_id, state_value)
 
         new_state_time = int(state_id.decode().split('-')[0])
