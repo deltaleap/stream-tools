@@ -11,8 +11,7 @@ def test_stream_init():
 @pytest.mark.asyncio
 async def test_stream_context(redis):
     async with Stream('test') as stream:
-        a = await stream.read()
-        assert a is None
+        value = stream.read()
         redis.xadd('test', {"val": 1})
-        a = await stream.read()
+        a = await value.__anext__()
         assert a == ('test', {"val": 1})

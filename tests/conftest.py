@@ -2,7 +2,6 @@ import aioredis
 import pytest
 
 
-@pytest.mark.asyncio
 @pytest.fixture
 async def redis():
     """Return redis client instance

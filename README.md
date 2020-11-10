@@ -1,15 +1,19 @@
 # stream_tools
 `stream-tools` is a python module that implement some utils to work with Redis Streams.
-The module has been developed internally in Delta Leap, and currently it is part of the real-time infrastructure.
+`stream-tools` aims to help building scripts to real-time read, transform and write data.
+
 
 ### Stream
 `stream-tools` implement a simple Stream module through a context manager.
 To learn how to use the module, just watch the file `examples` folder.
 
+
 ### Merging two streams
 ![merge](assets/merge.png)
 
+
 ### Joining two streams
+
 
 #### Option 1: Update state
 The joined stream conserve a state that it is updated at each observation from any upstream.
@@ -77,6 +81,8 @@ Flow example (timeframe: 3):
 
 
 ### TODO
-non-realtime join type:
-- [ ] staker (stake data and release all data after x observations)
-- [ ] dam (stake data and release all data after x seconds)
+- [ ] docstring
+- [ ] testing
+- [ ] non-realtime join type:
+	- [ ] staker (stake data and release all data after x observations)
+	- [ ] dam (stake data and release all data after x seconds)
