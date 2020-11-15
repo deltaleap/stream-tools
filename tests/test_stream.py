@@ -53,7 +53,6 @@ async def test_read_multiple_records(redis: aioredis.Redis) -> None:
 
     res = await asyncio.gather(_checker(), _main())
     for row in res[1]:
-        pprint.pprint(row)
         assert row[0] == b'test_stream_1'
 
     for idx, row in enumerate(res[1]):
