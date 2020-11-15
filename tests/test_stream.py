@@ -1,17 +1,18 @@
 import asyncio
 
+import aioredis
 import pytest
 
 from stream_tools import Stream
 
 
-def test_stream_init():
+def test_stream_init() -> None:
     stream = Stream('test')
     assert stream.name == 'test'
 
 
 @pytest.mark.asyncio
-async def test_read_one_record(redis):
+async def test_read_one_record(redis: aioredis.Redis) -> None:
     async def _main():
         async with Stream('test_stream_1') as s:
             async for value in s.read():
@@ -30,7 +31,7 @@ async def test_read_one_record(redis):
 
 
 @pytest.mark.asyncio
-async def test_read_multiple_records(redis):
+async def test_read_multiple_records(redis: aioredis.Redis) -> None:
     async def _main():
         async with Stream('test_stream_1') as s:
             async for value in s.read():
