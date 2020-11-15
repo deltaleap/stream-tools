@@ -7,7 +7,7 @@ import aioredis
 async def push1(r):
     while True:
         p = await r.xadd(
-            f"test_stream_1",
+            'test_stream_1',
             {'val': random.random()},
             max_len=2,
             exact_len=True
@@ -19,7 +19,7 @@ async def push1(r):
 async def push2(r):
     while True:
         p = await r.xadd(
-            f"test_stream_2",
+            'test_stream_2',
             {'val': random.random()},
             max_len=2,
             exact_len=True

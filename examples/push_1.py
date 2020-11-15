@@ -6,7 +6,8 @@ import aioredis
 
 async def push(r):
     while True:
-        p = await r.xadd(f'stream_1',
+        p = await r.xadd(
+            'stream_1',
             {
                 'val': random.random() + 0.5
             },

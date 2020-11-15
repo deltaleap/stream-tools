@@ -1,4 +1,4 @@
-import aioredis  # type: ignore
+import aioredis
 
 
 class Stream:

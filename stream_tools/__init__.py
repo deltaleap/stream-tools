@@ -3,6 +3,6 @@ from .streams import Streams
 
 
 __all__ = [
-    Stream,
-    Streams
+    'Stream',
+    'Streams'
 ]
