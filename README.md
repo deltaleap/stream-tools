@@ -1,3 +1,4 @@
+![Testing](https://github.com/deltaleap/stream-tools/workflows/Testing/badge.svg)
 # stream_tools
 `stream-tools` is a python module that implement some utils to work with Redis Streams.
 `stream-tools` aims to help building scripts to real-time read, transform and write data.
@@ -83,6 +84,3 @@ Flow example (timeframe: 3):
 ### TODO
 - [ ] docstring
 - [ ] testing
-- [ ] non-realtime join type:
-	- [ ] staker (stake data and release all data after x observations)
-	- [ ] dam (stake data and release all data after x seconds)
