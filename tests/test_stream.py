@@ -52,13 +52,11 @@ async def test_read_multiple_records(redis: aioredis.Redis) -> None:
         return result
 
     res = await asyncio.gather(_checker(), _main())
-    import pprint
     for row in res[1]:
         pprint.pprint(row)
         assert row[0] == b'test_stream_1'
 
     for idx, row in enumerate(res[1]):
-        print(idx)
         assert row[1] == res[0][idx]
 
     for idx, row in enumerate(res[1]):
