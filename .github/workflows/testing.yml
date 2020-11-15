@@ -45,7 +45,7 @@ jobs:
 
         - name: Mypy
           run: |
-            mypy .
+            mypy stream_tools tests
 
         - name: Test with Pytest
           run: |
