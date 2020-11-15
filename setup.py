@@ -4,7 +4,7 @@ from setuptools import find_packages
 
 setup(
     name='stream-tools',
-    version='0.1',
+    version='0.2',
     author='Mattia Terenzi',
     packages=find_packages(),
     install_requires=[
