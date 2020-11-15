@@ -9,3 +9,4 @@ async def redis():
     redis = await aioredis.create_redis('redis://localhost')
     yield redis
     await redis.flushall()
+    redis.close()

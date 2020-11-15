@@ -1,8 +1,10 @@
+from __future__ import annotations
 import asyncio
 import time
+
 from typing import Dict
 from typing import Tuple
-from typing import Union
+from typing import TYPE_CHECKING
 
 import aioredis
 
@@ -16,7 +18,11 @@ JOIN = [
 
 State = Dict[bytes, Tuple[bytes, bytes]]
 StateTime = Dict[bytes, int]
-StreamQueue = asyncio.Queue[Tuple[Union[bytes, Dict[bytes, bytes]]]]
+
+if TYPE_CHECKING:
+    StreamQueue = asyncio.Queue[Tuple[bytes, bytes, bytes]]
+else:
+    StreamQueue = asyncio.Queue
 
 
 class Join:
