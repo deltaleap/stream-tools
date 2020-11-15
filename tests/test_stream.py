@@ -33,30 +33,32 @@ async def test_read_one_record(redis: aioredis.Redis) -> None:
 @pytest.mark.asyncio
 async def test_read_multiple_records(redis: aioredis.Redis) -> None:
     async def _main():
-        async with Stream('test_stream_1') as s:
-            async for value in s.read():
-                i = 0
-                result = []
+        async with Stream('test_stream_1') as stream:
+            i = 0
+            result = []
+            async for value in stream.read():
                 if i < 5:
                     result.append(value)
                     i += 1
-                return result
+                else:
+                    break
+        return result
 
     async def _checker():
         await asyncio.sleep(.1)
         result = []
-        for i in range(5):
+        for i in range(6):
             val = await redis.xadd('test_stream_1', {'x': i})
             await asyncio.sleep(.1)
             result.append(val)
         return result
 
-    res = await asyncio.gather(_checker(), _main())
-    for row in res[1]:
+    check, res = await asyncio.gather(_checker(), _main())
+    for row in res:
         assert row[0] == b'test_stream_1'
 
-    for idx, row in enumerate(res[1]):
-        assert row[1] == res[0][idx]
+    for idx, row in enumerate(res):
+        assert row[1] == check[idx]
 
-    for idx, row in enumerate(res[1]):
+    for idx, row in enumerate(res):
         assert row[2] == {b'x': str(idx).encode()}
