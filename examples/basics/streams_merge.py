@@ -7,8 +7,8 @@ from stream_tools import Streams
 
 
 async def main():
-    stream1 = Stream('test_stream_1')
-    stream2 = Stream('test_stream_2')
+    stream1 = Stream("test_stream_1")
+    stream2 = Stream("test_stream_2")
     async with Streams([stream1, stream2]) as streams:
         async for value in streams.merge():
             # Return a tuple:

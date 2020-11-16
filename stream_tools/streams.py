@@ -10,9 +10,7 @@ class Streams:
         self.stream_names = [s.name for s in stream_list]
 
     async def __aenter__(self):
-        self.redis = await aioredis.create_redis(
-            'redis://localhost'
-        )
+        self.redis = await aioredis.create_redis("redis://localhost")
 
         return self
 
@@ -29,8 +27,5 @@ class Streams:
 
     async def _reads(self, queue):
         while True:
-            res = await self.redis.xread(
-                self.stream_names,
-                count=1
-            )
+            res = await self.redis.xread(self.stream_names, count=1)
             await queue.put(res[0])

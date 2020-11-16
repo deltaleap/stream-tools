@@ -7,19 +7,14 @@ import aioredis
 async def push(r):
     while True:
         p = await r.xadd(
-            'stream_1',
-            {
-                'val': random.random() + 0.5
-            },
-            max_len=5,
-            exact_len=True
+            "stream_1", {"val": random.random() + 0.5}, max_len=5, exact_len=True
         )
-        print(f'stream_1: {p.decode()}')
-        await asyncio.sleep(.8)
+        print(f"stream_1: {p.decode()}")
+        await asyncio.sleep(0.8)
 
 
 async def main():
-    r = await aioredis.create_redis('redis://localhost')
+    r = await aioredis.create_redis("redis://localhost")
     await push(r)
     r.close()
 

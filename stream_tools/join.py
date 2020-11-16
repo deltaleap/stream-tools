@@ -9,11 +9,7 @@ from typing import TYPE_CHECKING
 import aioredis
 
 
-JOIN = [
-    'update_state',
-    'time_catch',
-    'timeframe'
-]
+JOIN = ["update_state", "time_catch", "timeframe"]
 
 
 State = Dict[bytes, Tuple[bytes, bytes]]
@@ -26,27 +22,21 @@ else:
 
 
 class Join:
-    def __init__(
-        self,
-        redis: aioredis.Redis,
-        callback,
-        join: str,
-        *args
-    ) -> None:
+    def __init__(self, redis: aioredis.Redis, callback, join: str, *args) -> None:
         self.redis = redis
         self.callback = callback
 
         if join in JOIN:
             self.join = str(join)
         else:
-            raise ValueError('Wrong join type.')
+            raise ValueError("Wrong join type.")
 
-        if join == 'time_catch':
+        if join == "time_catch":
             self.window = args[0] * 1000
             self.state: State = {}
             self.state_time: StateTime = {}
 
-        if join == 'update_state':
+        if join == "update_state":
             self.state = {}
             self.state_time = {}
 
@@ -57,9 +47,9 @@ class Join:
         return self
 
     async def __anext__(self):
-        if self.join == 'time_catch':
+        if self.join == "time_catch":
             return await self.time_catch()
-        elif self.join == 'update_state':
+        elif self.join == "update_state":
             return await self.update_state()
         # elif self.join == 'timeframe':
         #     return await self.timeframe()  # TODO
@@ -73,15 +63,11 @@ class Join:
         return self.state
 
     def _time_store_state(
-        self,
-        join_time: int,
-        state_key: bytes,
-        state_id: bytes,
-        state_value: bytes
+        self, join_time: int, state_key: bytes, state_id: bytes, state_value: bytes
     ) -> None:
         self.state[state_key] = (state_id, state_value)
 
-        new_state_time = int(state_id.decode().split('-')[0])
+        new_state_time = int(state_id.decode().split("-")[0])
         self.state_time[state_key] = new_state_time
 
         # remove state props too old if compared with the given window
@@ -96,5 +82,5 @@ class Join:
 
     def _store_state(self, state_key, state_id, state_value) -> None:
         self.state[state_key] = (state_id, state_value)
-        new_state_time = int(state_id.decode().split('-')[0])
+        new_state_time = int(state_id.decode().split("-")[0])
         self.state_time[state_key] = new_state_time

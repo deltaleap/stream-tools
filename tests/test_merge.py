@@ -13,8 +13,8 @@ from stream_tools import Streams
 @pytest.mark.asyncio
 async def test_merge(redis) -> None:
     async def _main() -> List[Tuple[bytes, bytes, Dict[bytes, bytes]]]:
-        stream1 = Stream('test_stream_merge_1')
-        stream2 = Stream('test_stream_merge_2')
+        stream1 = Stream("test_stream_merge_1")
+        stream2 = Stream("test_stream_merge_2")
         async with Streams([stream1, stream2]) as streams:
             i = 0
             result = []
@@ -29,11 +29,11 @@ async def test_merge(redis) -> None:
     async def _checker() -> List[bytes]:
         result = []
         for i in range(3):
-            await asyncio.sleep(.1)
-            val = await redis.xadd('test_stream_merge_1', {'x': float(i)})
+            await asyncio.sleep(0.1)
+            val = await redis.xadd("test_stream_merge_1", {"x": float(i)})
             result.append(val)
-            await asyncio.sleep(.1)
-            val = await redis.xadd('test_stream_merge_2', {'x': (i + 1.0) * 2})
+            await asyncio.sleep(0.1)
+            val = await redis.xadd("test_stream_merge_2", {"x": (i + 1.0) * 2})
             result.append(val)
         return result
 
@@ -44,12 +44,12 @@ async def test_merge(redis) -> None:
 
     for idx, row in enumerate(res):
         if idx % 2 == 0:
-            assert row[0] == b'test_stream_merge_1'
+            assert row[0] == b"test_stream_merge_1"
         else:
-            assert row[0] == b'test_stream_merge_2'
+            assert row[0] == b"test_stream_merge_2"
 
-    assert res[0][2] == {b'x': str(float(0)).encode()}
-    assert res[1][2] == {b'x': str(float((0 + 1.0) * 2)).encode()}
-    assert res[2][2] == {b'x': str(float(1)).encode()}
-    assert res[3][2] == {b'x': str(float((1 + 1.0) * 2)).encode()}
-    assert res[4][2] == {b'x': str(float(2)).encode()}
+    assert res[0][2] == {b"x": str(float(0)).encode()}
+    assert res[1][2] == {b"x": str(float((0 + 1.0) * 2)).encode()}
+    assert res[2][2] == {b"x": str(float(1)).encode()}
+    assert res[3][2] == {b"x": str(float((1 + 1.0) * 2)).encode()}
+    assert res[4][2] == {b"x": str(float(2)).encode()}
