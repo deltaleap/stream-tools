@@ -1,6 +1,7 @@
-# stream_tools
+# Stream Tools
 ![Actions](https://github.com/deltaleap/stream-tools/workflows/Testing/badge.svg)
 [![PyPI version](https://badge.fury.io/py/stream-tools.svg)](https://badge.fury.io/py/stream-tools)
+
 `stream-tools` is a python module that implement some utils to work with Redis Streams.
 `stream-tools` aims to help building scripts to real-time read, transform and write data.
 

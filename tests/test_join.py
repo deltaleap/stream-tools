@@ -2,7 +2,6 @@ import asyncio
 
 from typing import List
 from typing import Dict
-from typing import Tuple
 
 import pytest
 
@@ -12,7 +11,7 @@ from stream_tools import Streams
 
 @pytest.mark.asyncio
 async def test_join_file_without_join_method(redis) -> None:
-    async def _main():
+    async def _main() -> None:
         stream1 = Stream('test_stream_join_1')
         stream2 = Stream('test_stream_join_2')
 
@@ -26,7 +25,7 @@ async def test_join_file_without_join_method(redis) -> None:
 
 @pytest.mark.asyncio
 async def test_join_time_catch_with_no_time_value(redis) -> None:
-    async def _main() -> List[Tuple[bytes, bytes, Dict[bytes, bytes]]]:
+    async def _main() -> None:
         stream1 = Stream('test_stream_1')
         stream2 = Stream('test_stream_2')
 
@@ -40,7 +39,7 @@ async def test_join_time_catch_with_no_time_value(redis) -> None:
 
 @pytest.mark.asyncio
 async def test_join_update_state(redis) -> None:
-    async def _main() -> List[Tuple[bytes, bytes, Dict[bytes, bytes]]]:
+    async def _main() -> List[Dict[bytes, Dict[bytes, bytes]]]:
         stream1 = Stream('test_stream_1')
         stream2 = Stream('test_stream_2')
 
@@ -92,7 +91,7 @@ async def test_join_update_state(redis) -> None:
 
 @pytest.mark.asyncio
 async def test_join_time_catch(redis) -> None:
-    async def _main() -> List[Tuple[bytes, bytes, Dict[bytes, bytes]]]:
+    async def _main() -> List[Dict[bytes, Dict[bytes, bytes]]]:
         stream1 = Stream('test_stream_1')
         stream2 = Stream('test_stream_2')
 
