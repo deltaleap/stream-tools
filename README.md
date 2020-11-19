@@ -1,5 +1,6 @@
-![Testing](https://github.com/deltaleap/stream-tools/workflows/Testing/badge.svg)
 # stream_tools
+![Actions](https://github.com/deltaleap/stream-tools/workflows/Testing/badge.svg)
+[![PyPI version](https://badge.fury.io/py/stream-tools.svg)](https://badge.fury.io/py/stream-tools)
 `stream-tools` is a python module that implement some utils to work with Redis Streams.
 `stream-tools` aims to help building scripts to real-time read, transform and write data.
 
@@ -21,7 +22,7 @@ The joined stream conserve a state that it is updated at each observation from a
 The joined stream emits the state at each update.
 ![join_update_state](assets/join_update_state.png)
 
-Flow example:
+Flow example (see test [`test_join_update_state`]()):
 
 <pre>
 > <b>time 1</b> stream_1 emits 1
@@ -39,7 +40,7 @@ The state is conserved with the data from a certain number of second since the m
 The joined sream emits the state at each update.
 ![join_time_catch](assets/join_time_catch.png)
 
-Flow example (delta time: 3):
+Flow example (delta time: 3) (see test [`test_join_time_catch`](https://github.com/deltaleap/stream-tools/blob/main/tests/test_join.py)):
 
 <pre>
 > <b>time 1</b> stream_1 emits 1

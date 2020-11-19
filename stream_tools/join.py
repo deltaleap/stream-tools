@@ -42,6 +42,9 @@ class Join:
             raise ValueError('Wrong join type.')
 
         if join == 'time_catch':
+            if len(args) == 0:
+                raise TypeError('No time window provided.')
+
             self.window = args[0] * 1000
             self.state: State = {}
             self.state_time: StateTime = {}
