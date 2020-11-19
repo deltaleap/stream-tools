@@ -4,7 +4,13 @@
 [![PyPI version](https://badge.fury.io/py/stream-tools.svg)](https://badge.fury.io/py/stream-tools)
 
 `stream-tools` is a python module that implement some utils to work with Redis Streams.
-`stream-tools` aims to help building scripts to real-time read, transform and write data.
+`stream-tools` aims to help building scripts to read, transform and write data in near-real-time.
+
+### How to install
+Simply type:
+```
+pip install stream-tools
+```
 
 
 ### Stream
