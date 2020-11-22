@@ -1,7 +1,7 @@
 import aioredis  # type: ignore
 
-from .join import Join
-from .merge import Merge
+from .tools.join import Join
+from .tools.merge import Merge
 
 
 class Streams:
