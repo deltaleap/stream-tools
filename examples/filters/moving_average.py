@@ -7,9 +7,9 @@ from stream_tools.filters import MovingAverage
 
 
 async def main() -> None:
-    stream = Stream('stream_1')
+    stream = Stream("stream_1")
     async with stream:
-        async for value in MovingAverage(stream, ('x', 3)):
+        async for value in MovingAverage(stream, ("x", 3)):
             print(value)
 
 

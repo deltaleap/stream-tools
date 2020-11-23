@@ -16,10 +16,14 @@ if TYPE_CHECKING:
 else:
     StreamValue = OrderedDict
 
+
 class MovingAverageState:
     def __init__(self, windows: List[Tuple[str, int]]) -> None:
         self.windows = windows
-        self.state = {field.encode(): np.array([np.nan] * window) for field, window in self.windows.items()}
+        self.state = {
+            field.encode(): np.array([np.nan] * window)
+            for field, window in self.windows.items()
+        }
 
     def _update(self, new_value: StreamValue) -> Dict[bytes, float]:
         for field, value in new_value.items():
@@ -29,9 +33,7 @@ class MovingAverageState:
             except KeyError:
                 pass
 
-        output = {
-            field: np.nanmean(values) for field, values in self.state.items()
-        }
+        output = {field: np.nanmean(values) for field, values in self.state.items()}
 
         # remove nan values
         for f in list(output):
@@ -47,25 +49,23 @@ class MovingAverageState:
 
     def update(self, new_record: Tuple[bytes, bytes, StreamValue]):
         name, idx, new_value = new_record
-        new_name = f'moving_average({name.decode()})'.encode()
+        new_name = f"moving_average({name.decode()})".encode()
         self.new_output = self._update(new_value)
         return new_name, idx, self.new_output
 
 
 class MovingAverage:
     def __init__(
-        self,
-        stream: Stream,
-        window: Union[Tuple[str, int], List[Tuple[str, int]]]
+        self, stream: Stream, window: Union[Tuple[str, int], List[Tuple[str, int]]]
     ) -> None:
         self.stream = stream
- 
+
         if isinstance(window, tuple):
             self.windows = {window[0]: window[1]}
         elif isinstance(window, list):
             self.windows = {w[0]: w[1] for w in window}
         else:  # TODO: when if a list of other than tuples
-            raise TypeError('MovingAverage window must be tuple or list of tuples.')
+            raise TypeError("MovingAverage window must be tuple or list of tuples.")
 
         self.state = MovingAverageState(self.windows)
 
@@ -78,8 +78,8 @@ class MovingAverage:
 
     @property
     def node_name(self) -> str:
-        args = ', '.join([f'({k}, {v})' for k, v in self.windows.items()])
-        node_name = f'moving_average({self.source_name})[{args}]'
+        args = ", ".join([f"({k}, {v})" for k, v in self.windows.items()])
+        node_name = f"moving_average({self.source_name})[{args}]"
         return node_name
 
     def __aiter__(self) -> MovingAverage:
