@@ -3,7 +3,6 @@ import asyncio
 from collections import OrderedDict
 from typing import List
 
-import numpy as np
 import pytest
 
 from stream_tools import Stream
@@ -106,13 +105,13 @@ def test_moving_average_init() -> None:
 def test_moving_average_wrong_init_args() -> None:
     stream = Stream("test_stream")
     with pytest.raises(TypeError):
-        ma = MovingAverage(stream)
+        MovingAverage(stream)
     with pytest.raises(TypeError):
-        ma = MovingAverage(stream, 5)
+        MovingAverage(stream, 5)
     with pytest.raises(TypeError):
-        ma = MovingAverage(stream, "x")
+        MovingAverage(stream, 'x')
     with pytest.raises(TypeError):
-        ma = MovingAverage(stream, {"x": 5})
+        MovingAverage(stream, {'x': 5})
 
 
 @pytest.mark.asyncio
