@@ -3,7 +3,7 @@ import asyncio
 from stream_tools import Stream
 
 
-async def main():
+async def main() -> None:
     async with Stream('stream_1') as s:
         async for value in s.read():
             print(value)

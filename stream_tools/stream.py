@@ -17,7 +17,7 @@ class Stream:
         return self.stream_name
 
     async def __aenter__(self):
-        self.r = await aioredis.create_redis(
+        self.redis = await aioredis.create_redis(
             'redis://localhost'
         )
         self.running = True
@@ -29,7 +29,7 @@ class Stream:
         exception: str,
         traceback: str
     ) -> None:
-        self.r.close()
+        self.redis.close()
 
     async def __aiter__(self) -> Stream:
         return self
@@ -40,7 +40,7 @@ class Stream:
     ) -> AsyncGenerator[ReadMessageType, None]:
         last_message_id = b'0'
         while self.running:
-            res = await self.r.xread(
+            res = await self.redis.xread(
                 [self.stream_name],
                 latest_ids=[last_message_id],
                 count=1
@@ -49,3 +49,11 @@ class Stream:
             for row in res:
                 last_message_id = row[1]
                 yield row
+
+    async def _read(self, queue):
+        while True:
+            res = await self.redis.xread(
+                [self.stream_name],
+                count=1
+            )
+            await queue.put(res[0])
