@@ -109,9 +109,9 @@ def test_moving_average_wrong_init_args() -> None:
     with pytest.raises(TypeError):
         MovingAverage(stream, 5)
     with pytest.raises(TypeError):
-        MovingAverage(stream, 'x')
+        MovingAverage(stream, "x")
     with pytest.raises(TypeError):
-        MovingAverage(stream, {'x': 5})
+        MovingAverage(stream, {"x": 5})
 
 
 @pytest.mark.asyncio
