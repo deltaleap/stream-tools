@@ -40,8 +40,8 @@ class CommandsMixin:
 		self,
 		stream: str,
 		fields: Dict[str, Union[bytes, float, int, str]],
-		max_len: int,
-		exact_len: bool
+		max_len: Optional[int],
+		exact_len: Optional[bool]
 	) -> bytes: ...
 
 
