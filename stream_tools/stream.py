@@ -1,11 +1,25 @@
 from __future__ import annotations
-from typing import Dict
+
+import asyncio
+
+from collections import OrderedDict
+from types import TracebackType
+from typing import Type
 from typing import Tuple
 from typing import AsyncGenerator
+from typing import Optional
+from typing import TYPE_CHECKING
 
 import aioredis
 
-ReadMessageType = Tuple[bytes, bytes, Dict[bytes, bytes]]
+if TYPE_CHECKING:
+    StreamValue = OrderedDict[bytes, bytes]
+    StreamRecord = Tuple[bytes, bytes, StreamValue]
+    StreamQueue = asyncio.Queue[StreamRecord]
+else:
+    StreamValue = OrderedDict
+    StreamRecord = Tuple[bytes, bytes, StreamValue]
+    StreamQueue = asyncio.Queue
 
 
 class Stream:
@@ -16,20 +30,30 @@ class Stream:
     def name(self) -> str:
         return self.stream_name
 
-    async def __aenter__(self):
+    async def __aenter__(self) -> Stream:
         self.redis = await aioredis.create_redis("redis://localhost")
         self.running = True
         return self
 
     async def __aexit__(
-        self, exception_type: str, exception: str, traceback: str
-    ) -> None:
+        self,
+        exception_type: Optional[Type[BaseException]],
+        exception: Optional[BaseException],
+        traceback: Optional[TracebackType]
+    ) -> Optional[bool]:
         self.redis.close()
+        if isinstance(exception, RuntimeError):
+            return True
+        else:
+            return False
 
     async def __aiter__(self) -> Stream:
         return self
 
-    async def read(self, timeout: int = 1) -> AsyncGenerator[ReadMessageType, None]:
+    async def read(
+        self,
+        timeout: int = 1
+    ) -> AsyncGenerator[StreamRecord, None]:
         last_message_id = b"0"
         while self.running:
             res = await self.redis.xread(
@@ -40,7 +64,7 @@ class Stream:
                 last_message_id = row[1]
                 yield row
 
-    async def _read(self, queue):
+    async def _read(self, queue: StreamQueue) -> None:
         while True:
             res = await self.redis.xread([self.stream_name], count=1)
             await queue.put(res[0])

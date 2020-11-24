@@ -1,9 +1,21 @@
+from __future__ import annotations
 import asyncio
 
+from collections import OrderedDict
+from typing import Tuple
+from typing import Dict
+from typing import List
+from typing import TYPE_CHECKING
+
 import aioredis
-import pytest
+import pytest  # type: ignore
 
 from stream_tools import Stream
+
+if TYPE_CHECKING:
+    StreamValue = OrderedDict[bytes, bytes]
+else:
+    StopValue = OrderedDict
 
 
 def test_stream_init() -> None:
@@ -13,12 +25,13 @@ def test_stream_init() -> None:
 
 @pytest.mark.asyncio
 async def test_read_one_record(redis: aioredis.Redis) -> None:
-    async def _main():
+    async def _main() -> Tuple[bytes, bytes, Dict[bytes, bytes]]:
         async with Stream('test_stream_1') as s:
             async for value in s.read():
                 return value
+            return value
 
-    async def _checker():
+    async def _checker() -> bytes:
         await asyncio.sleep(.1)
         val = await redis.xadd('test_stream_1', {'x': 10.0})
         return val
@@ -32,7 +45,7 @@ async def test_read_one_record(redis: aioredis.Redis) -> None:
 
 @pytest.mark.asyncio
 async def test_read_multiple_records(redis: aioredis.Redis) -> None:
-    async def _main():
+    async def _main() -> List[Tuple[bytes, bytes, StreamValue]]:
         async with Stream('test_stream_1') as stream:
             i = 0
             result = []
@@ -44,7 +57,7 @@ async def test_read_multiple_records(redis: aioredis.Redis) -> None:
                     break
         return result
 
-    async def _checker():
+    async def _checker() -> List[bytes]:
         await asyncio.sleep(.1)
         result = []
         for i in range(6):

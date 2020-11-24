@@ -1,9 +1,11 @@
+from typing import AsyncGenerator
+
 import aioredis
-import pytest
+import pytest  # type: ignore
 
 
 @pytest.fixture
-async def redis():
+async def redis() -> AsyncGenerator:
     """Return redis client instance
     """
     redis = await aioredis.create_redis('redis://localhost')

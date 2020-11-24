@@ -1,5 +1,7 @@
 from __future__ import annotations
+
 import asyncio
+
 from collections import OrderedDict
 from typing import Union
 from typing import Dict
@@ -7,18 +9,21 @@ from typing import List
 from typing import Tuple
 from typing import TYPE_CHECKING
 
-import numpy as np
+import numpy as np  # type: ignore
 
 from ..stream import Stream
 
 if TYPE_CHECKING:
     StreamValue = OrderedDict[bytes, bytes]
+    StreamRecord = Tuple[bytes, bytes, StreamValue]
+    StreamQueue = asyncio.Queue[StreamRecord]
 else:
     StreamValue = OrderedDict
+    StreamQueue = asyncio.Queue
 
 
 class MovingAverageState:
-    def __init__(self, windows: List[Tuple[str, int]]) -> None:
+    def __init__(self, windows: Dict[str, int]) -> None:
         self.windows = windows
         self.state = {
             field.encode(): np.array([np.nan] * window)
@@ -33,7 +38,9 @@ class MovingAverageState:
             except KeyError:
                 pass
 
-        output = {field: np.nanmean(values) for field, values in self.state.items()}
+        output = {
+            field: np.nanmean(values) for field, values in self.state.items()
+        }
 
         # remove nan values
         for f in list(output):
@@ -47,7 +54,10 @@ class MovingAverageState:
 
         return output
 
-    def update(self, new_record: Tuple[bytes, bytes, StreamValue]):
+    def update(
+        self,
+        new_record: Tuple[bytes, bytes, StreamValue]
+    ) -> Tuple[bytes, bytes, Dict[bytes, float]]:
         name, idx, new_value = new_record
         new_name = f"moving_average({name.decode()})".encode()
         self.new_output = self._update(new_value)
@@ -56,7 +66,9 @@ class MovingAverageState:
 
 class MovingAverage:
     def __init__(
-        self, stream: Stream, window: Union[Tuple[str, int], List[Tuple[str, int]]]
+        self,
+        stream: Stream,
+        window: Union[Tuple[str, int], List[Tuple[str, int]]]
     ) -> None:
         self.stream = stream
 
@@ -65,11 +77,13 @@ class MovingAverage:
         elif isinstance(window, list):
             self.windows = {w[0]: w[1] for w in window}
         else:  # TODO: when if a list of other than tuples
-            raise TypeError("MovingAverage window must be tuple or list of tuples.")
+            raise TypeError(
+                "MovingAverage window must be tuple or list of tuples."
+            )
 
         self.state = MovingAverageState(self.windows)
 
-        self.queue = asyncio.Queue()
+        self.queue: StreamQueue = asyncio.Queue()
         asyncio.ensure_future(self.stream._read(self.queue))
 
     @property
@@ -85,6 +99,6 @@ class MovingAverage:
     def __aiter__(self) -> MovingAverage:
         return self
 
-    async def __anext__(self):
+    async def __anext__(self) -> Tuple[bytes, bytes, Dict[bytes, float]]:
         res = await self.queue.get()
         return self.state.update(res)

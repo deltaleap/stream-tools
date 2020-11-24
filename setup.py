@@ -9,6 +9,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         'aioredis==1.3.1',
-        'uvloop==0.14.0'
+        'uvloop==0.14.0',
+        'numpy==1.19.4'
     ]
 )
