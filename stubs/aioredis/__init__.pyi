@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from typing import Any
 from typing import Optional
 from typing import List
@@ -6,8 +7,8 @@ from typing import Dict
 from typing import Union
 
 
-ReadMessageType = Tuple[bytes, bytes, Dict[bytes, bytes]]
-RangeMessageType = Tuple[bytes, Dict[bytes, bytes]]
+ReadMessageType = Tuple[bytes, bytes, OrderedDict[bytes, bytes]]
+RangeMessageType = Tuple[bytes, OrderedDict[bytes, bytes]]
 
 
 class CommandsMixin:

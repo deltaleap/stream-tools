@@ -2,6 +2,8 @@ from __future__ import annotations
 import asyncio
 import time
 
+from collections import OrderedDict
+from typing import Callable
 from typing import Dict
 from typing import Tuple
 from typing import TYPE_CHECKING
@@ -9,29 +11,26 @@ from typing import TYPE_CHECKING
 import aioredis
 
 
-JOIN = [
-    'update_state',
-    'time_catch',
-    'timeframe'
-]
+JOIN = ["update_state", "time_catch", "timeframe"]
 
 
-State = Dict[bytes, Tuple[bytes, bytes]]
 StateTime = Dict[bytes, int]
 
 if TYPE_CHECKING:
-    StreamQueue = asyncio.Queue[Tuple[bytes, bytes, bytes]]
+    StreamValue = OrderedDict[bytes, bytes]
+    StreamRecord = Tuple[bytes, bytes, StreamValue]
+    StreamQueue = asyncio.Queue[StreamRecord]
+    State = Dict[bytes, Tuple[bytes, OrderedDict[bytes, bytes]]]
 else:
+    StreamValue = OrderedDict
+    StreamRecord = Tuple[bytes, bytes, StreamValue]
     StreamQueue = asyncio.Queue
+    State = Dict[bytes, Tuple[bytes, OrderedDict]]
 
 
 class Join:
     def __init__(
-        self,
-        redis: aioredis.Redis,
-        callback,
-        join: str,
-        *args
+        self, redis: aioredis.Redis, callback: Callable, join: str, *args: str
     ) -> None:
         self.redis = redis
         self.callback = callback
@@ -39,33 +38,34 @@ class Join:
         if join in JOIN:
             self.join = str(join)
         else:
-            raise ValueError('Wrong join type.')
+            raise ValueError("Wrong join type.")
 
-        if join == 'time_catch':
+        if join == "time_catch":
             if len(args) == 0:
-                raise TypeError('No time window provided.')
+                raise TypeError("No time window provided.")
 
-            self.window = args[0] * 1000
+            self.window = int(args[0]) * 1000
             self.state: State = {}
             self.state_time: StateTime = {}
 
-        if join == 'update_state':
+        if join == "update_state":
             self.state = {}
             self.state_time = {}
 
         self.queue: StreamQueue = asyncio.Queue()
         asyncio.ensure_future(self.callback(self.queue))
 
-    def __aiter__(self):
+    def __aiter__(self) -> Join:
         return self
 
-    async def __anext__(self):
-        if self.join == 'time_catch':
-            return await self.time_catch()
-        elif self.join == 'update_state':
-            return await self.update_state()
+    async def __anext__(self) -> State:
+        if self.join == "time_catch":
+            res = await self.time_catch()
+        elif self.join == "update_state":
+            res = await self.update_state()
         # elif self.join == 'timeframe':
-        #     return await self.timeframe()  # TODO
+        #     res = await self.timeframe()  # TODO
+        return res
 
     async def time_catch(self) -> State:
         res = await self.queue.get()
@@ -80,11 +80,11 @@ class Join:
         join_time: int,
         state_key: bytes,
         state_id: bytes,
-        state_value: bytes
+        state_value: StreamValue,
     ) -> None:
         self.state[state_key] = (state_id, state_value)
 
-        new_state_time = int(state_id.decode().split('-')[0])
+        new_state_time = int(state_id.decode().split("-")[0])
         self.state_time[state_key] = new_state_time
 
         # remove state props too old if compared with the given window
@@ -97,7 +97,9 @@ class Join:
         self._store_state(res[0], res[1], res[2])
         return self.state
 
-    def _store_state(self, state_key, state_id, state_value) -> None:
+    def _store_state(
+        self, state_key: bytes, state_id: bytes, state_value: StreamValue
+    ) -> None:
         self.state[state_key] = (state_id, state_value)
-        new_state_time = int(state_id.decode().split('-')[0])
+        new_state_time = int(state_id.decode().split("-")[0])
         self.state_time[state_key] = new_state_time

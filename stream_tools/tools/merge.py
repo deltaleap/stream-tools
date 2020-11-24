@@ -1,6 +1,7 @@
 from __future__ import annotations
 import asyncio
 
+from collections import OrderedDict
 from typing import Tuple
 from typing import Callable
 from typing import TYPE_CHECKING
@@ -9,8 +10,10 @@ import aioredis
 
 
 if TYPE_CHECKING:
-    StreamQueue = asyncio.Queue[Tuple[bytes, bytes, bytes]]
+    StreamRecord = Tuple[bytes, bytes, OrderedDict[bytes, bytes]]
+    StreamQueue = asyncio.Queue[StreamRecord]
 else:
+    StreamRecord = Tuple[bytes, bytes, OrderedDict]
     StreamQueue = asyncio.Queue
 
 
@@ -24,6 +27,6 @@ class Merge:
     def __aiter__(self) -> Merge:
         return self
 
-    async def __anext__(self):
+    async def __anext__(self) -> StreamRecord:
         res = await self.queue.get()
-        return res
+        return res  # yield?
