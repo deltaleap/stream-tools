@@ -4,7 +4,7 @@ import random
 import aioredis
 
 
-async def push1(r):
+async def push1(r: aioredis.Redis) -> None:
     while True:
         p = await r.xadd(
             'test_stream_1',
@@ -16,7 +16,7 @@ async def push1(r):
         await asyncio.sleep(1)
 
 
-async def push2(r):
+async def push2(r: aioredis.Redis) -> None:
     while True:
         p = await r.xadd(
             'test_stream_2',
@@ -28,7 +28,7 @@ async def push2(r):
         await asyncio.sleep(3)
 
 
-async def main():
+async def main() -> None:
     r = await aioredis.create_redis('redis://localhost')
     await asyncio.gather(push1(r), push2(r))
     r.close()

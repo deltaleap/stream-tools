@@ -5,7 +5,7 @@ import uvloop
 
 from stream_tools import Streams, Stream
 
-# prova
+
 async def main() -> None:
     stream1 = Stream("test_stream_1")
     stream2 = Stream("test_stream_2")
@@ -13,7 +13,7 @@ async def main() -> None:
         async for value in streams.join("update_state"):
             print("===")
             pp(value)
-            print("===")
+            print("===\n")
 
 
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())

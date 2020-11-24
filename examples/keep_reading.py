@@ -3,7 +3,7 @@ import asyncio
 import aioredis
 
 
-async def main():
+async def main() -> None:
     r = await aioredis.create_redis('redis://localhost')
     while True:
         res1 = await r.xread(['test_stream_1'], count=1)
