@@ -6,8 +6,8 @@ authors = ["Mattia Terenzi <m.terenzi92@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 python = "^3.7"
-homepage = "https://github.com/deltaleap/stream_tools"
-repository = "https://github.com/deltaleap/stream_tools"
+homepage = "https://github.com/deltaleap/stream-tools"
+repository = "https://github.com/deltaleap/stream-tools"
 
 keywords = ["stream", "redis", "async"]
 
