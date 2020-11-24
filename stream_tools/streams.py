@@ -38,7 +38,7 @@ class Streams:
         self,
         exception_type: Optional[Type[BaseException]],
         exception: Optional[BaseException],
-        traceback: Optional[TracebackType]
+        traceback: Optional[TracebackType],
     ) -> Optional[bool]:
         self.redis.close()
         if isinstance(exception, RuntimeError):

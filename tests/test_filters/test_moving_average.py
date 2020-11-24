@@ -12,30 +12,22 @@ from stream_tools.filters.moving_average import MovingAverageState
 
 def test_movave_state_one_arg_one_value() -> None:
     ma_state = MovingAverageState({"x": 3})
-    assert ma_state.update(
-        (b"a", b"1606081071444-0", OrderedDict({b"x": b"1.0"}))
-    ) == (
+    assert ma_state.update((b"a", b"1606081071444-0", OrderedDict({b"x": b"1.0"}))) == (
         b"moving_average(a)",
         b"1606081071444-0",
         {b"x": 1.0},
     )
-    assert ma_state.update(
-        (b"a", b"1606081071587-0", OrderedDict({b"x": b"2.0"}))
-    ) == (
+    assert ma_state.update((b"a", b"1606081071587-0", OrderedDict({b"x": b"2.0"}))) == (
         b"moving_average(a)",
         b"1606081071587-0",
         {b"x": 1.5},
     )
-    assert ma_state.update(
-        (b"a", b"1606081071619-0", OrderedDict({b"x": b"3.0"}))
-    ) == (
+    assert ma_state.update((b"a", b"1606081071619-0", OrderedDict({b"x": b"3.0"}))) == (
         b"moving_average(a)",
         b"1606081071619-0",
         {b"x": 2.0},
     )
-    assert ma_state.update(
-        (b"a", b"1606081071991-0", OrderedDict({b"x": b"4.0"}))
-    ) == (
+    assert ma_state.update((b"a", b"1606081071991-0", OrderedDict({b"x": b"4.0"}))) == (
         b"moving_average(a)",
         b"1606081071991-0",
         {b"x": 3.0},
@@ -76,30 +68,22 @@ def test_movave_state_two_args_two_values() -> None:
 
 def test_movave_state_two_args_one_value() -> None:
     ma_state = MovingAverageState({"x": 3, "y": 2})
-    assert ma_state.update(
-        (b"a", b"1606081071444-0", OrderedDict({b"x": b"1.0"}))
-    ) == (
+    assert ma_state.update((b"a", b"1606081071444-0", OrderedDict({b"x": b"1.0"}))) == (
         b"moving_average(a)",
         b"1606081071444-0",
         {b"x": 1.0},
     )
-    assert ma_state.update(
-        (b"a", b"1606081071587-0", OrderedDict({b"x": b"2.0"}))
-    ) == (
+    assert ma_state.update((b"a", b"1606081071587-0", OrderedDict({b"x": b"2.0"}))) == (
         b"moving_average(a)",
         b"1606081071587-0",
         {b"x": 1.5},
     )
-    assert ma_state.update(
-        (b"a", b"1606081071619-0", OrderedDict({b"x": b"3.0"}))
-    ) == (
+    assert ma_state.update((b"a", b"1606081071619-0", OrderedDict({b"x": b"3.0"}))) == (
         b"moving_average(a)",
         b"1606081071619-0",
         {b"x": 2.0},
     )
-    assert ma_state.update(
-        (b"a", b"1606081071991-0", OrderedDict({b"x": b"4.0"}))
-    ) == (
+    assert ma_state.update((b"a", b"1606081071991-0", OrderedDict({b"x": b"4.0"}))) == (
         b"moving_average(a)",
         b"1606081071991-0",
         {b"x": 3.0},
@@ -115,10 +99,7 @@ def test_moving_average_init() -> None:
     assert ma1.source_name == "test_stream"
     assert ma1.node_name == "moving_average(test_stream)[(x, 5)]"
     assert ma2.source_name == "another_test_stream"
-    assert ma2.node_name == (
-        "moving_average(another_test_stream)"
-        "[(x, 5), (y, 2)]"
-    )
+    assert ma2.node_name == ("moving_average(another_test_stream)" "[(x, 5), (y, 2)]")
 
 
 def test_moving_average_wrong_init_args() -> None:

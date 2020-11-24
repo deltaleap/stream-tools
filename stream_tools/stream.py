@@ -39,7 +39,7 @@ class Stream:
         self,
         exception_type: Optional[Type[BaseException]],
         exception: Optional[BaseException],
-        traceback: Optional[TracebackType]
+        traceback: Optional[TracebackType],
     ) -> Optional[bool]:
         self.redis.close()
         if isinstance(exception, RuntimeError):
@@ -50,10 +50,7 @@ class Stream:
     async def __aiter__(self) -> Stream:
         return self
 
-    async def read(
-        self,
-        timeout: int = 1
-    ) -> AsyncGenerator[StreamRecord, None]:
+    async def read(self, timeout: int = 1) -> AsyncGenerator[StreamRecord, None]:
         last_message_id = b"0"
         while self.running:
             res = await self.redis.xread(

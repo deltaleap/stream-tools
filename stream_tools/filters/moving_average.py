@@ -38,9 +38,7 @@ class MovingAverageState:
             except KeyError:
                 pass
 
-        output = {
-            field: np.nanmean(values) for field, values in self.state.items()
-        }
+        output = {field: np.nanmean(values) for field, values in self.state.items()}
 
         # remove nan values
         for f in list(output):
@@ -55,8 +53,7 @@ class MovingAverageState:
         return output
 
     def update(
-        self,
-        new_record: Tuple[bytes, bytes, StreamValue]
+        self, new_record: Tuple[bytes, bytes, StreamValue]
     ) -> Tuple[bytes, bytes, Dict[bytes, float]]:
         name, idx, new_value = new_record
         new_name = f"moving_average({name.decode()})".encode()
@@ -66,9 +63,7 @@ class MovingAverageState:
 
 class MovingAverage:
     def __init__(
-        self,
-        stream: Stream,
-        window: Union[Tuple[str, int], List[Tuple[str, int]]]
+        self, stream: Stream, window: Union[Tuple[str, int], List[Tuple[str, int]]]
     ) -> None:
         self.stream = stream
 
@@ -77,9 +72,7 @@ class MovingAverage:
         elif isinstance(window, list):
             self.windows = {w[0]: w[1] for w in window}
         else:  # TODO: when if a list of other than tuples
-            raise TypeError(
-                "MovingAverage window must be tuple or list of tuples."
-            )
+            raise TypeError("MovingAverage window must be tuple or list of tuples.")
 
         self.state = MovingAverageState(self.windows)
 

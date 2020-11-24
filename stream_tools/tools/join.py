@@ -30,11 +30,7 @@ else:
 
 class Join:
     def __init__(
-        self,
-        redis: aioredis.Redis,
-        callback: Callable,
-        join: str,
-        *args: str
+        self, redis: aioredis.Redis, callback: Callable, join: str, *args: str
     ) -> None:
         self.redis = redis
         self.callback = callback
@@ -84,7 +80,7 @@ class Join:
         join_time: int,
         state_key: bytes,
         state_id: bytes,
-        state_value: StreamValue
+        state_value: StreamValue,
     ) -> None:
         self.state[state_key] = (state_id, state_value)
 
@@ -102,10 +98,7 @@ class Join:
         return self.state
 
     def _store_state(
-        self,
-        state_key: bytes,
-        state_id: bytes,
-        state_value: StreamValue
+        self, state_key: bytes, state_id: bytes, state_value: StreamValue
     ) -> None:
         self.state[state_key] = (state_id, state_value)
         new_state_time = int(state_id.decode().split("-")[0])
