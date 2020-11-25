@@ -132,16 +132,16 @@ async def test_moving_average_with_one_arg(redis) -> None:
 
     async def _checker() -> List[bytes]:
         await asyncio.sleep(0.1)
-        # time: 1
+        # time: 0.1
         a = await redis.xadd("test_stream", {"x": 1.0, "y": 10.0})
-        # time: 2
-        await asyncio.sleep(2)
+        # time: 0.2
+        await asyncio.sleep(0.2)
         b = await redis.xadd("test_stream", {"x": 3.0, "y": 5.6})
-        # time: 6
-        await asyncio.sleep(4)
+        # time: 0.6
+        await asyncio.sleep(0.4)
         c = await redis.xadd("test_stream", {"x": 13.1, "y": 3.0})
-        # time: 9
-        await asyncio.sleep(3)
+        # time: 0.9
+        await asyncio.sleep(0.3)
         d = await redis.xadd("test_stream", {"x": 4.0, "y": 9.0})
         await redis.xadd("test_stream", {"x": 1})  # just to stop the stream
         return [a, b, c, d]
@@ -175,16 +175,16 @@ async def test_moving_average_with_two_args(redis) -> None:
 
     async def _checker() -> List[bytes]:
         await asyncio.sleep(0.1)
-        # time: 1
+        # time: 0.1
         a = await redis.xadd("test_stream", {"x": 1.0, "y": 10.0})
-        # time: 2
-        await asyncio.sleep(2)
+        # time: 0.2
+        await asyncio.sleep(0.2)
         b = await redis.xadd("test_stream", {"x": 3.0, "y": 5.6})
-        # time: 6
-        await asyncio.sleep(4)
+        # time: 0.6
+        await asyncio.sleep(0.4)
         c = await redis.xadd("test_stream", {"x": 13.1, "y": 3.0})
-        # time: 9
-        await asyncio.sleep(3)
+        # time: 0.9
+        await asyncio.sleep(0.3)
         d = await redis.xadd("test_stream", {"x": 4.0, "y": 9.0})
         await redis.xadd("test_stream", {"x": 1})  # just to stop the stream
         return [a, b, c, d]
@@ -218,16 +218,16 @@ async def test_moving_average_with_missing_field(redis) -> None:
 
     async def _checker() -> List[bytes]:
         await asyncio.sleep(0.1)
-        # time: 1
+        # time: 0.1
         a = await redis.xadd("test_stream", {"x": 1.0, "y": 10.0})
-        # time: 2
-        await asyncio.sleep(2)
+        # time: 0.2
+        await asyncio.sleep(0.2)
         b = await redis.xadd("test_stream", {"x": 3.0, "y": 5.6})
-        # time: 6
-        await asyncio.sleep(4)
+        # time: 0.6
+        await asyncio.sleep(0.4)
         c = await redis.xadd("test_stream", {"x": 13.1, "y": 3.0})
-        # time: 9
-        await asyncio.sleep(3)
+        # time: 0.9
+        await asyncio.sleep(0.3)
         d = await redis.xadd("test_stream", {"x": 4.0, "y": 9.0})
         await redis.xadd("test_stream", {"x": 1})  # just to stop the stream
         return [a, b, c, d]

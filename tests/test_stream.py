@@ -29,6 +29,7 @@ async def test_read_one_record(redis: aioredis.Redis) -> None:
         async with Stream("test_stream_1") as s:
             async for value in s.read():
                 result = value
+                break
             return result
 
     async def _checker() -> bytes:

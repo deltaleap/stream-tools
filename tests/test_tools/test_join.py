@@ -59,13 +59,13 @@ async def test_join_update_state(redis) -> None:
 
     async def _checker() -> List[bytes]:
         await asyncio.sleep(0.1)
-        # time: 1
+        # time: 0.1
         a = await redis.xadd("test_stream_1", {"x": 1.0})
-        # time: 2
-        await asyncio.sleep(1)
+        # time: 0.2
+        await asyncio.sleep(0.1)
         b = await redis.xadd("test_stream_2", {"x": 2.0})
-        # time: 8
-        await asyncio.sleep(6)
+        # time: 0.8
+        await asyncio.sleep(0.6)
         c = await redis.xadd("test_stream_1", {"x": 5.0})
         await redis.xadd("test_stream_1", {"x": 1})  # just to stop the stream
         return [a, b, c]
@@ -90,7 +90,7 @@ async def test_join_time_catch(redis) -> None:
         async with Streams([stream1, stream2]) as streams:
             i = 0
             result = []
-            async for value in streams.join("time_catch", 3):
+            async for value in streams.join("time_catch", 0.3):
                 if i < 5:
                     # value: {b'stream_name': (
                     #     b'id', OrderedDict(b'k': b'v')
@@ -103,19 +103,19 @@ async def test_join_time_catch(redis) -> None:
 
     async def _checker() -> List[bytes]:
         await asyncio.sleep(0.1)
-        # time: 1
+        # time: 0.1
         a = await redis.xadd("test_stream_1", {"x": 1.0})
-        # time: 2
-        await asyncio.sleep(1)
+        # time: 0.2
+        await asyncio.sleep(0.1)
         b = await redis.xadd("test_stream_2", {"x": 2.0})
-        # time: 8
-        await asyncio.sleep(6)
+        # time: 0.8
+        await asyncio.sleep(0.6)
         c = await redis.xadd("test_stream_1", {"x": 5.0})
-        # time: 10
-        await asyncio.sleep(2)
+        # time: 1.0
+        await asyncio.sleep(0.2)
         d = await redis.xadd("test_stream_2", {"x": 3.0})
-        # time: 15
-        await asyncio.sleep(5)
+        # time: 1.5
+        await asyncio.sleep(0.5)
         e = await redis.xadd("test_stream_2", {"x": 9.0})
         await redis.xadd("test_stream_1", {"x": 1})  # just to stop the stream
         return [a, b, c, d, e]

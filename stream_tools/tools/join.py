@@ -30,7 +30,7 @@ else:
 
 class Join:
     def __init__(
-        self, redis: aioredis.Redis, callback: Callable, join: str, *args: str
+        self, redis: aioredis.Redis, callback: Callable, join: str, *args: Union[int, float]
     ) -> None:
         self.redis = redis
         self.callback = callback
@@ -44,7 +44,7 @@ class Join:
             if len(args) == 0:
                 raise TypeError("No time window provided.")
 
-            self.window = int(args[0]) * 1000
+            self.window = float(args[0]) * 1000
             self.state: State = {}
             self.state_time: StateTime = {}
 
