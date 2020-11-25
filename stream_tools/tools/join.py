@@ -6,6 +6,7 @@ from collections import OrderedDict
 from typing import Callable
 from typing import Dict
 from typing import Tuple
+from typing import Union
 from typing import TYPE_CHECKING
 
 import aioredis
@@ -30,7 +31,11 @@ else:
 
 class Join:
     def __init__(
-        self, redis: aioredis.Redis, callback: Callable, join: str, *args: Union[int, float]
+        self,
+        redis: aioredis.Redis,
+        callback: Callable,
+        join: str,
+        *args: Union[int, float]
     ) -> None:
         self.redis = redis
         self.callback = callback

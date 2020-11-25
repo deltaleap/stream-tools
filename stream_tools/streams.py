@@ -7,6 +7,7 @@ from typing import List
 from typing import Type
 from typing import Tuple
 from typing import Optional
+from typing import Union
 from typing import TYPE_CHECKING
 
 import aioredis
@@ -50,7 +51,7 @@ class Streams:
         merger = Merge(self.redis, self._reads)
         return merger
 
-    def join(self, join_method: str, *args: str) -> Join:
+    def join(self, join_method: str, *args: Union[int, float]) -> Join:
         joiner = Join(self.redis, self._reads, join_method, *args)
         return joiner
 
