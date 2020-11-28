@@ -23,7 +23,15 @@ else:
 
 
 class MovingAverageState:
+    """State class to manage moving average data and results
+    """
     def __init__(self, windows: Dict[str, int]) -> None:
+        """Initialize the Moving Average State class
+
+        Args:
+            windows (Dict[str, int]): the moving average window for each
+                field
+        """
         self.windows = windows
         self.state = {
             field.encode(): np.array([np.nan] * window)
@@ -31,6 +39,17 @@ class MovingAverageState:
         }
 
     def _update(self, new_value: StreamValue) -> Dict[bytes, float]:
+        """Calculate the moving average with the new values, store new_values
+            and return the output
+
+        Args:
+            new_value (StreamValue): the output of the moving average
+                calculated with the new value
+
+        Returns:
+            Dict[bytes, float]: the result of the moving average for each
+                of the fields of the new value provided
+        """
         for field, value in new_value.items():
             try:
                 self.state[field][:-1] = self.state[field][1:]
@@ -55,6 +74,18 @@ class MovingAverageState:
     def update(
         self, new_record: Tuple[bytes, bytes, StreamValue]
     ) -> Tuple[bytes, bytes, Dict[bytes, float]]:
+        """Update the state of the moving average and return the result
+
+        Args:
+            new_record (Tuple[bytes, bytes, StreamValue]): the new value to
+                calculate the moving average
+
+        Returns:
+            Tuple[bytes, bytes, Dict[bytes, float]]: the new moving average
+                result as a tuple: (name of the moving average node, redis id
+                of the new observation provided, the dictionary containing for
+                each field the result of the moving average)
+        """
         name, idx, new_value = new_record
         new_name = f"moving_average({name.decode()})".encode()
         self.new_output = self._update(new_value)
@@ -62,9 +93,24 @@ class MovingAverageState:
 
 
 class MovingAverage:
+    """Moving Average Filter class. Calculate the moving average of the
+        provided streams. This filter can calculated a moving average
+        with different time windows for each fields in the stream.
+    """
     def __init__(
         self, stream: Stream, window: Union[Tuple[str, int], List[Tuple[str, int]]]
     ) -> None:
+        """Initialize the moving average filter and start the reader function
+
+        Args:
+            stream (Stream): the source stream
+            window (Union[Tuple[str, int], List[Tuple[str, int]]]): moving
+                average window for each field of the provieded source
+                stream
+
+        Raises:
+            TypeError: in case of wrong window type
+        """
         self.stream = stream
 
         if isinstance(window, tuple):
@@ -81,17 +127,39 @@ class MovingAverage:
 
     @property
     def source_name(self) -> str:
+        """The source stream name getter
+
+        Returns:
+            str: the name of the source streams
+        """
         return self.stream.name
 
     @property
     def node_name(self) -> str:
+        """The node name getter
+
+        Returns:
+            str: the node name
+        """
         args = ", ".join([f"({k}, {v})" for k, v in self.windows.items()])
         node_name = f"moving_average({self.source_name})[{args}]"
         return node_name
 
     def __aiter__(self) -> MovingAverage:
+        """Get the moving average iterator
+
+        Returns:
+            MovingAverage: the moving average instance
+        """
         return self
 
     async def __anext__(self) -> Tuple[bytes, bytes, Dict[bytes, float]]:
+        """Get the next value from the queue and update
+            the state of the Moving Average
+
+        Returns:
+            Tuple[bytes, bytes, Dict[bytes, float]]: the new state of the
+                Moving Average (provided by the Moving Average State class)
+        """
         res = await self.queue.get()
         return self.state.update(res)
