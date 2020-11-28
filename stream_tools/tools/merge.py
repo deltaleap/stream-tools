@@ -18,15 +18,35 @@ else:
 
 
 class Merge:
-    def __init__(self, redis: aioredis.Redis, callback: Callable) -> None:
+    """Merger class. Merge in a single row values received 
+    from two or more streams
+    """
+    def __init__(self, redis: aioredis.Redis, reader: Callable) -> None:
+        """Initialize the merger and start running the reader function
+
+        Args:
+            redis (aioredis.Redis): the redis instance
+            reader (Callable): reader function that will
+                send merged the parameters to the internal queue
+        """
         self.redis = redis
-        self.callback = callback
+        self.reader = reader
         self.queue: StreamQueue = asyncio.Queue()
-        asyncio.ensure_future(self.callback(self.queue))
+        asyncio.ensure_future(self.reader(self.queue))
 
     def __aiter__(self) -> Merge:
+        """Get the merge iterator
+
+        Returns:
+            Merge: the merger instance
+        """
         return self
 
     async def __anext__(self) -> StreamRecord:
+        """ Get the next value from the streams
+
+        Returns:
+            StreamRecord: return the element from the streams
+        """
         res = await self.queue.get()
         return res  # yield?
