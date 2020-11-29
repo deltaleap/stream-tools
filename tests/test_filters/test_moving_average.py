@@ -99,7 +99,10 @@ def test_moving_average_init() -> None:
     assert ma1.source_name == "test_stream"
     assert ma1.node_name == "moving_average(test_stream)[(x, 5)]"
     assert ma2.source_name == "another_test_stream"
-    assert ma2.node_name == ("moving_average(another_test_stream)" "[(x, 5), (y, 2)]")
+    assert ma2.node_name == (
+        "moving_average(another_test_stream)"
+        "[(x, 5), (y, 2)]"
+    )
 
 
 def test_moving_average_wrong_init_args() -> None:
