@@ -134,7 +134,7 @@ class Join:
         self.state_time[state_key] = new_state_time
 
         # remove state props too old if compared with the given window
-        for k in self.state_time.keys():
+        for k in self.state_time:
             if new_state_time - self.state_time[k] > self.window:
                 del self.state[k]
 
