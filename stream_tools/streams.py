@@ -68,10 +68,7 @@ class Streams:
             Optional[bool]: if the context is exited with a runtime error
         """
         self.redis.close()
-        if isinstance(exception, RuntimeError):
-            return True
-        else:
-            return False
+        return bool(isinstance(exception, RuntimeError))
 
     def merge(self) -> Merge:
         """Return a merger as an iterator.

@@ -73,10 +73,7 @@ class Stream:
             Optional[bool]: if the context is exited with a runtime error
         """
         self.redis.close()
-        if isinstance(exception, RuntimeError):
-            return True
-        else:
-            return False
+        return bool(isinstance(exception, RuntimeError))
 
     async def __aiter__(self) -> Stream:
         """Return the Stream as an iterator.
