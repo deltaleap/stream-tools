@@ -5,29 +5,33 @@ import asyncio
 from collections import OrderedDict
 from typing import Dict
 from typing import Tuple
+from typing import List
+from typing import Union
+from typing import Optional
 from typing import TYPE_CHECKING
+
+from ..stream import Stream
 
 if TYPE_CHECKING:
     StreamValue = OrderedDict[bytes, bytes]
     StreamRecord = Tuple[bytes, bytes, StreamValue]
-#    StreamQueue = asyncio.Queue[StreamRecord]
+    StreamQueue = asyncio.Queue[StreamRecord]
 else:
     StreamValue = OrderedDict
-#    StreamQueue = asyncio.Queue
+    StreamQueue = asyncio.Queue
 
 
 class SumBarState:
-    def __init__(self, thresholds: Dict[str, int]) -> None:
+    def __init__(self, thresholds: Dict[str, float]) -> None:
         self.thresholds = thresholds
         self.trigger = False
-        self.output = {}
+        self.output: Optional[Tuple[bytes, bytes, Dict[bytes, float]]] = None
         self.empty_state()
 
     def empty_state(self) -> None:
         self.state = {
-            field.encode(): 0 for field in self.thresholds.keys()
+            field.encode(): 0.0 for field in self.thresholds.keys()
         }
-
 
     def check_trigger(self) -> None:
         status = False
@@ -51,7 +55,7 @@ class SumBarState:
         self.name = f'sum({name.decode()})'.encode()
         self.last_idx = idx
 
-        if self.trigger == True:
+        if self.trigger:
             self.empty_state()
             self.trigger = False
 
@@ -68,7 +72,10 @@ class SumBar:
     def __init__(
         self,
         stream: Stream,
-        threshold: Union[Tuple[str, int], List[Tuple[str, int]]]
+        threshold: Union[
+            Tuple[str, Union[int, float]],
+            List[Tuple[str, Union[int, float]]]
+        ]
     ) -> None:
         self.stream = stream
 
@@ -81,7 +88,7 @@ class SumBar:
 
         self.state = SumBarState(self.thresholds)
 
-        self.queue = asyncio.Queue()
+        self.queue: StreamQueue = asyncio.Queue()
         asyncio.ensure_future(self.stream._read(self.queue))
 
     @property
@@ -97,7 +104,7 @@ class SumBar:
     def __aiter__(self) -> SumBar:
         return self
 
-    async def __anext__(self) -> Tuple[bytes, bytes, Dict[bytes, float]]:
+    async def __anext__(self) -> Optional[Tuple[bytes, bytes, Dict[bytes, float]]]:
 
         while True:
             res = await self.queue.get()
