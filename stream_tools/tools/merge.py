@@ -18,7 +18,7 @@ else:
 
 
 class Merge:
-    """Merger class. Merge in a single row values received 
+    """Merger class. Merge in a single row values received
     from two or more streams
     """
     def __init__(self, redis: aioredis.Redis, reader: Callable) -> None:

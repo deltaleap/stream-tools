@@ -1,6 +1,5 @@
 from __future__ import annotations
 import asyncio
-import time
 
 from collections import OrderedDict
 from typing import Callable
@@ -104,25 +103,22 @@ class Join:
             State: the updated state as a result of the timed join
         """
         res = await self.queue.get()
-        join_time = int(time.time() * 1000)
 
-        self._time_store_state(join_time, res[0], res[1], res[2])
+        self._time_store_state(res[0], res[1], res[2])
 
         return self.state
 
     def _time_store_state(
         self,
-        join_time: int,
         state_key: bytes,
         state_id: bytes,
         state_value: StreamValue,
     ) -> None:
         """Update the joiner state and the timestamp of the last state
             for new observation from the streams, and remove state too
-            old if compared from the provided time window. 
+            old if compared from the provided time window.
 
         Args:
-            join_time (int): the reference time in milliseconds
             state_key (bytes): the stream name of the new observation
             state_id (bytes): redis id (timestamp) for the new observation
             state_value (StreamValue): fields-values included in the
