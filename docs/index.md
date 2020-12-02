@@ -1,17 +1,13 @@
 # Stream Tools
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+`stream-tools` is a python module that implement some utils to work with Redis Streams.
+`stream-tools` aims to help building scripts to read, transform and write data in near-real-time.
 
-## Commands
+`stream-tools` implement a simple Stream module through a context manager.
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+### How to
 
-## Project layout
+To start learning how to use `stream-tools` you have the following alternatives:
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+* read this documentation
+* check the [examples folder](https://github.com/deltaleap/stream-tools/tree/main/examples)
