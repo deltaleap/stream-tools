@@ -1,0 +1,10 @@
+site_name: Stream Tools
+theme:
+    name: readthedocs
+
+nav:
+    - Home: index.md
+    - Install: install.md
+    - Tools: tools.md
+    - Filters: filters.md
+    - Bars: bars.md
