@@ -11,3 +11,4 @@ async def redis() -> AsyncGenerator:
     yield redis
     await redis.flushall()
     redis.close()
+    await redis.wait_closed()
