@@ -1,5 +1,6 @@
 from collections import namedtuple
 
+from typing import Any
 from typing import Dict
 from typing import Union
 from typing import NamedTuple
@@ -7,7 +8,7 @@ from typing import NamedTuple
 
 def sanitize(
     input_data: Dict[bytes, bytes],
-    mode: str = "all"
+    mode: Any = "all"
 ) -> Dict[Union[str, bytes], Union[int, float, str, bytes]]:
     if mode == "keys":
         return _sanitize_keys(input_data)
@@ -26,7 +27,7 @@ def _sanitize_keys(data: Dict[bytes, bytes]) -> Dict[str, bytes]:
     return {k.decode(): v for k, v in data.items()}
 
 
-def _sanitize_values(data: Dict[bytes, bytes]) -> Dict[bytes, Union[int, float, str]]:
+def _sanitize_values(data: Dict[bytes, bytes], int_timestamp: bool = True) -> Dict[bytes, Union[int, float, str]]:
     new_data = {}
     for k, v in data.items():
         try:
@@ -34,6 +35,8 @@ def _sanitize_values(data: Dict[bytes, bytes]) -> Dict[bytes, Union[int, float, 
         except ValueError:
             try:
                 new_value = float(v)
+                if k.decode() == "timestamp" or k.decode() == "TIMESTAMP":
+                    new_value = int(float(v) * 1000)
             except ValueError:
                 new_value = v.decode()
         new_data[k] = new_value
