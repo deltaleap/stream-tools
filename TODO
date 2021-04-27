@@ -1,3 +1,8 @@
 * refactor of all examples
 * refactor of all tests
-* refactor of the library
+* refactor of the code
+* doc update
+* pre-commit
+* flake8
+* mypy
+* complete test
