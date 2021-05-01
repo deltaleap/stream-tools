@@ -1,4 +1,28 @@
-## Tools
+## Basic
+
+This section describes the basic functionality of `stream-tools` and how to building your first scripts.
+
+### The first agent
+
+The basic feature of `stream-tools` is the `agent`.
+Ideally, the agent is any function that could be registered and that has the following feature:
+- is state-less: the function do its own stuff only based on the value provided by the stream;
+- one stream as input: the function can work on only one stream;
+- no stream as output: the function doesn't return any value;
+- side-effect only: the function can execute side-effect stuff, such as printing the value to the stdout or sending the value to another database, etc.
+
+Once a function is registered with the decorator `@app.agent`, it will be executed for each of the value in the stream.
+
+The following examples are useful:
+- [examples/basics/stream.py](https://github.com/deltaleap/stream-tools/tree/main/examples/basics/stream.py)
+- [examples/basics/stream_to_pg.py](https://github.com/deltaleap/stream-tools/tree/main/examples/basics/stream_to_pg.py)
+
+
+### Let's inflow new streams
+
+
+
+
 
 ### Merging two streams
 ![merge](assets/merge.png)

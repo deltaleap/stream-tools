@@ -30,7 +30,12 @@ async def push2(r: aioredis.Redis) -> None:
 
 async def main() -> None:
     r = await aioredis.create_redis('redis://localhost')
-    await asyncio.gather(push1(r), push2(r))
+    asyncio.create_task(push1(r))
+    asyncio.create_task(push2(r))
+
+    while True:
+        await asyncio.sleep(10)
+
     r.close()
 
 

@@ -9,16 +9,21 @@ async def push(r: aioredis.Redis, n: int) -> None:
         p = await r.xadd(f"test_stream_{n}", {
                 'val': random.random()
             },
-            max_len=2,
-            exact_len=True
+            maxlen=2,
+            approximate=False
         )
         print(f"{n}: {p.decode()}")
         await asyncio.sleep(.8 * n)
 
 
 async def main() -> None:
-    r = await aioredis.create_redis('redis://localhost')
-    await asyncio.gather(*[push(r, i) for i in range(1, 3)])
+    r = aioredis.from_url('redis://localhost')
+    for i in range(1, 4):
+        asyncio.create_task(push(r, i))
+
+    while True:
+        await asyncio.sleep(10)
+
     r.close()
 
 

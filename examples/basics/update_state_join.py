@@ -1,21 +1,19 @@
 import asyncio
-from pprint import pprint as pp
+from pprint import pprint
 
 import uvloop
 
-from stream_tools import Streams, Stream
-
-
-async def main() -> None:
-    stream1 = Stream("test_stream_1")
-    stream2 = Stream("test_stream_2")
-    async with Streams([stream1, stream2]) as streams:
-        async for value in streams.join("update_state"):
-            print("===")
-            pp(value)
-            print("===\n")
+from stream_tools import App
 
 
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-loop = asyncio.get_event_loop()
-loop.run_until_complete(main())
+
+
+@app.join(["test_stream_1", "test_stream_2"], {mode: "update_state"})
+async def func() -> None:
+    print("===")
+    ppring(value)
+    print("===\n")
+
+
+app.run(debug=True)

@@ -2,20 +2,19 @@ import asyncio
 
 import uvloop
 
-from stream_tools import Stream
-from stream_tools import Streams
-
-
-async def main():
-    stream1 = Stream('test_stream_1')
-    stream2 = Stream('test_stream_2')
-    async with Streams([stream1, stream2]) as streams:
-        async for value in streams.merge():
-            # Return a tuple:
-            #  (stream name, record id, record content)
-            print(f"{value[0].decode()}: {value[1].decode()}")
+from stream_tools import App
 
 
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-loop = asyncio.get_event_loop()
-loop.run_until_complete(main())
+
+app = App(decode_responses=True)
+
+
+@app.merge(["test_stream_1", "test_stream_2", "test_stream_4"])
+async def func(stream, value) -> None:
+    # Print a tuple:
+    #  (stream name, record id, record content)
+    print(f"{stream} -> {value[0]}: {value[1]['val']}")
+
+
+app.run(debug=True)
