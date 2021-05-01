@@ -1,13 +1,15 @@
 import asyncio
 
-from stream_tools import Stream
+from stream_tools import App
 
 
-async def main() -> None:
-    async with Stream("stream_1") as s:
-        async for value in s.read():
-            print(value)
+app = App(decode_responses=True)
 
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(main())
+@app.agent("stream_1")
+async def print_data(value) -> None:
+    print(f"id: {value[0]}")
+    print(f"content: {value[1]}\n")
+
+
+app.run()

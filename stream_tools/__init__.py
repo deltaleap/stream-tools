@@ -1,10 +1,6 @@
-from .stream import Stream
-from .streams import Streams
-from .utils.sanitize import sanitize
+from .app import App
 
 
 __all__ = [
-    'Stream',
-    'Streams',
-    'sanitize'
+    'App',
 ]

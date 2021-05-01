@@ -11,15 +11,15 @@ async def push(r: aioredis.Redis) -> None:
             {
                 'val': random.random() + 1.5
             },
-            max_len=5,
-            exact_len=True
+            maxlen=5,
+            approximate=False
         )
         print(f'stram_2: {p.decode()}')
         await asyncio.sleep(2.1)
 
 
 async def main() -> None:
-    r = await aioredis.create_redis('redis://localhost')
+    r = aioredis.from_url('redis://localhost')
     await push(r)
     r.close()
 
